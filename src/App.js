@@ -1,16 +1,19 @@
 import React, {Component} from 'react';
-import ListTodos from "./components/listTodos";
+import ListTodos from "./components/ListTodos";
 
 import './App.css';
+import TopBar from "./components/TopBar";
+import FormTodo from "./components/FormTodo";
 
 class App extends Component {
     render() {
         return (
-            <div>
-                <h1>hello</h1>
+            <React.Fragment>
+
+                <TopBar/>
+                <FormTodo/>
                 <ListTodos />
-                <p>Well a para</p>
-            </div>
+            </React.Fragment>
         )
 
     }
