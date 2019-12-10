@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -12,7 +12,6 @@ import CardHeader from '@material-ui/core/CardHeader';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Todos from "./Todos";
-
 
 
 const useStyles = makeStyles(theme => ({
@@ -49,19 +48,56 @@ const useStyles = makeStyles(theme => ({
 
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-const fetchData = () => {
-    fetch(``)
-        .then(res => {
 
-        });
-    
-};
+
 const ListTodos = props => {
     const classes = useStyles();
+    const [isLoading, setIsLoading] = useState(false);
+    const [loadedLists, setLoadedList] = useState([]);
 
-    return (
-        <React.Fragment>
-            <CssBaseline />
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = () => {
+        setIsLoading(true);
+        fetch(`https://us-central1-whatodo-dcacc.cloudfunctions.net/api/lists`)
+            .then(res => {
+                if(!res.ok)
+                {
+                    throw new Error('Could not fetch lists.');
+                }
+
+                return res.json();
+            })
+            .then(result =>{
+                const tempLists =[];
+                result.data.map((list) => ({
+                    title: list.title,
+                    subtitle: list.subtitle,
+                    date: list.date,
+                    todos: list.todos,
+                    checked: list.checked,
+                    id: list.id
+                }))
+                setLoadedList();
+                console.log(result.data);
+                setIsLoading(false);
+            })
+            .catch(err =>{
+               console.log(err);
+               setIsLoading(false);
+            });
+
+    };
+
+    let content = <p>Loading ...</p>;
+
+    if (!isLoading && loadedLists)
+    {
+        content =(
+            <React.Fragment>
+                <CssBaseline />
 
                 <Container className={classes.cardGrid} maxWidth="md">
                     {/* End hero unit */}
@@ -83,6 +119,8 @@ const ListTodos = props => {
                                     </CardContent>
                                     <CardActions>
                                         <Button size="small">September 14, 2016</Button>
+
+
                                     </CardActions>
                                 </Card>
                             </Grid>
@@ -91,8 +129,14 @@ const ListTodos = props => {
                 </Container>
 
 
-        </React.Fragment>
-    );
+            </React.Fragment>
+        );
+    }else if (!isLoading && !loadedLists.id)
+    {
+        content = <p>Failed to fetch lists</p>
+    }
+
+    return content;
 }
 
 export default ListTodos;

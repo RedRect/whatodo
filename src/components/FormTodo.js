@@ -13,6 +13,8 @@ import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import PostAddSharpIcon from '@material-ui/icons/PostAddSharp';
 import TextField from '@material-ui/core/TextField';
+import DateFnsUtils from "@date-io/date-fns";
+import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 
 const useStyles = makeStyles(theme => ({
     icon: {
@@ -45,7 +47,11 @@ const useStyles = makeStyles(theme => ({
 }));
 export default function FormTodo(){
     const classes = useStyles();
+    const [selectedDate, setSelectedDate] = React.useState(Date.now);
 
+    const handleDateChange = date => {
+        setSelectedDate(date);
+    };
     return(
       <React.Fragment>
           <CssBaseline />
@@ -77,7 +83,19 @@ export default function FormTodo(){
                                   />
                               </CardContent>
                               <CardActions>
-                                  <Button size="small">September 14, 2016</Button>
+                                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                      <KeyboardDatePicker
+                                          margin="normal"
+                                          id="date-picker-dialog"
+                                          label="Complete at date: "
+                                          format="MM/dd/yyyy"
+                                          value={selectedDate}
+                                          onChange={handleDateChange}
+                                          KeyboardButtonProps={{
+                                              'aria-label': 'change date',
+                                          }}
+                                      />
+                                  </MuiPickersUtilsProvider>
                               </CardActions>
                           </Card>
                       </Grid>
