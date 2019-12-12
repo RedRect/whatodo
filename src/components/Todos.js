@@ -8,6 +8,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import ListTodos from "./ListTodos";
 const useStyles = makeStyles(theme => ({
     root: {
         width: '100%',
@@ -16,9 +17,9 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function Todos() {
+const Todos =props => {
     const classes = useStyles();
-    const [checked, setChecked] = React.useState([0]);
+    const [checked, setChecked] = React.useState([]);
 
     const handleToggle = value => () => {
         const currentIndex = checked.indexOf(value);
@@ -29,13 +30,13 @@ export default function Todos() {
         } else {
             newChecked.splice(currentIndex, 1);
         }
-
+        console.log(newChecked);
         setChecked(newChecked);
     };
 
     return (
         <List className={classes.root}>
-            {[0, 1, 2, 3].map(value => {
+            {props.list.todos.map(value => {
                 const labelId = `checkbox-list-label-${value}`;
 
                 return (
@@ -49,7 +50,7 @@ export default function Todos() {
                                 inputProps={{ 'aria-labelledby': labelId }}
                             />
                         </ListItemIcon>
-                        <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+                        <ListItemText id={labelId} primary={`${value}`} />
                         <ListItemSecondaryAction>
                             <IconButton edge="end" aria-label="delete">
                                 <DeleteForeverIcon />
@@ -61,3 +62,4 @@ export default function Todos() {
         </List>
     );
 }
+export default Todos;

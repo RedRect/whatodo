@@ -15,6 +15,8 @@ import PostAddSharpIcon from '@material-ui/icons/PostAddSharp';
 import TextField from '@material-ui/core/TextField';
 import DateFnsUtils from "@date-io/date-fns";
 import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 
 const useStyles = makeStyles(theme => ({
     icon: {
@@ -48,9 +50,21 @@ const useStyles = makeStyles(theme => ({
 export default function FormTodo(){
     const classes = useStyles();
     const [selectedDate, setSelectedDate] = React.useState(Date.now);
-
+    const [todos, setTodos] = React.useState([""]);
     const handleDateChange = date => {
         setSelectedDate(date);
+    };
+    const handleTodos  = (index) =>(event)=>{
+        const temp = todos;
+        const value =event.target.value;
+        temp[index] = value;
+        if(value !== '' && todos.length-1 === index )
+        {
+            // console.log(value);
+            temp.push("");
+            console.log(temp);
+        }
+        setTodos(temp);
     };
     return(
       <React.Fragment>
@@ -72,15 +86,24 @@ export default function FormTodo(){
 
                               />
                               <CardContent className={classes.cardContent}>
+                                  <div><TextField id="standard-basic" label="Title" /></div>
+                                  <div><TextField id="standard-basic" label="A small note" />
+                                  </div>
+                              </CardContent>
+                              <CardContent>
+                                  <h3>What to do?</h3>
+                                  <List>
+                                      {todos.map((todo, index)=> {
+                                          return (
+                                              <ListItem key={todo}>
+                                                  <TextField id="standard-basic" label={`To do #${todos.indexOf(todo)+1}`} onChange={handleTodos(index)}/>
+                                              </ListItem>
+                                          );
+                                      })}
 
-                                  <TextField
-                                      required
-                                      id="outlined-required"
-                                      label="Required"
-                                      className={classes.textField}
-                                      margin="normal"
-                                      variant="outlined"
-                                  />
+
+                                  </List>
+
                               </CardContent>
                               <CardActions>
                                   <MuiPickersUtilsProvider utils={DateFnsUtils}>

@@ -72,16 +72,11 @@ const ListTodos = props => {
             })
             .then(result =>{
                 const tempLists =[];
-                result.data.map((list) => ({
-                    title: list.title,
-                    subtitle: list.subtitle,
-                    date: list.date,
-                    todos: list.todos,
-                    checked: list.checked,
-                    id: list.id
-                }))
-                setLoadedList();
-                console.log(result.data);
+                result.data.map((list) =>
+                    tempLists.push(list)
+                )
+                setLoadedList(tempLists);
+                // console.log(tempLists[0].data);
                 setIsLoading(false);
             })
             .catch(err =>{
@@ -102,8 +97,8 @@ const ListTodos = props => {
                 <Container className={classes.cardGrid} maxWidth="md">
                     {/* End hero unit */}
                     <Grid container spacing={4}>
-                        {cards.map(card => (
-                            <Grid item key={card} xs={12} sm={6} md={4}>
+                        {loadedLists.map(list => (
+                            <Grid item key={list.id} xs={12} sm={6} md={4}>
                                 <Card className={classes.card}>
                                     <CardHeader
                                         action={
@@ -111,11 +106,11 @@ const ListTodos = props => {
                                                 <MoreVertIcon />
                                             </IconButton>
                                         }
-                                        title="Targets"
-                                        subheader={"for three months"}
+                                        title={list.data.title}
+                                        subheader={list.data.subtitle}
                                     />
                                     <CardContent className={classes.cardContent}>
-                                        <Todos/>
+                                        <Todos list={list.data}/>
                                     </CardContent>
                                     <CardActions>
                                         <Button size="small">September 14, 2016</Button>
@@ -131,7 +126,7 @@ const ListTodos = props => {
 
             </React.Fragment>
         );
-    }else if (!isLoading && !loadedLists.id)
+    }else if (!isLoading && !loadedLists)
     {
         content = <p>Failed to fetch lists</p>
     }
