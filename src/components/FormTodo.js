@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {makeStyles} from "@material-ui/core";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
@@ -12,26 +12,21 @@ import Todos from "./Todos";
 import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import PostAddSharpIcon from '@material-ui/icons/PostAddSharp';
+import AddBoxIcon from '@material-ui/icons/AddBox';
 import TextField from '@material-ui/core/TextField';
 import DateFnsUtils from "@date-io/date-fns";
 import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 
 const useStyles = makeStyles(theme => ({
-    icon: {
-        marginRight: theme.spacing(2),
-    },
-    heroContent: {
-        backgroundColor: theme.palette.background.paper,
-        padding: theme.spacing(8, 0, 6),
-    },
-    heroButtons: {
-        marginTop: theme.spacing(4),
-    },
+
     cardGrid: {
-        paddingTop: theme.spacing(8),
-        paddingBottom: theme.spacing(8),
+        paddingTop: theme.spacing(4),
+        paddingBottom: theme.spacing(4),
+        width: '100%'
     },
     card: {
         height: '100%',
@@ -40,32 +35,45 @@ const useStyles = makeStyles(theme => ({
     },
     cardContent: {
         flexGrow: 1,
+        width: '100%'
     },
-    textField: {
-        marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(1),
-        width: '90%'
+    datePicker:{
+        // justify = "flex-end" alignItems = "center"
+        // justify : 'flex-end',
+        // alignItems : 'center'
+        marginRight: theme.spacing(2),
     },
+    fab:{
+        marginLeft: theme.spacing(2),
+    }
 }));
 export default function FormTodo(){
     const classes = useStyles();
     const [selectedDate, setSelectedDate] = React.useState(Date.now);
     const [todos, setTodos] = React.useState([""]);
+    const [numTodo, setNumTodo ]= React.useState(1);
     const handleDateChange = date => {
         setSelectedDate(date);
     };
     const handleTodos  = (index) =>(event)=>{
-        const temp = todos;
+        let temp = todos;
         const value =event.target.value;
         temp[index] = value;
-        if(value !== '' && todos.length-1 === index )
-        {
-            // console.log(value);
-            temp.push("");
-            console.log(temp);
-        }
         setTodos(temp);
+
     };
+    const handleAddTaskbutt =() =>{
+        let temp = todos;
+        temp.push("");
+        console.log(todos);
+        setTodos(temp);
+        setNumTodo(numTodo+1);
+    };
+
+    useEffect(() => {
+        // console.log (`You clicked ${count} times`);
+    },[numTodo]);
+
     return(
       <React.Fragment>
           <CssBaseline />
@@ -74,7 +82,7 @@ export default function FormTodo(){
               {/* End hero unit */}
               <Grid container spacing={4}>
 
-                      <Grid  >
+                      <Grid  item xs={6}>
                           <Card className={classes.card}>
                               <CardHeader
                                   action={
@@ -86,17 +94,21 @@ export default function FormTodo(){
 
                               />
                               <CardContent className={classes.cardContent}>
-                                  <div><TextField id="standard-basic" label="Title" /></div>
-                                  <div><TextField id="standard-basic" label="A small note" />
+                                  <div><TextField className={classes.cardContent} label="Title" /></div>
+                                  <div><TextField className={classes.cardContent} label="A small note" />
                                   </div>
                               </CardContent>
                               <CardContent>
-                                  <h3>What to do?</h3>
+                                  <h3>What to do?
+                                      <IconButton aria-label="settings" onClick={handleAddTaskbutt}>
+                                          <AddBoxIcon />
+                                      </IconButton>
+                                  </h3>
                                   <List>
                                       {todos.map((todo, index)=> {
                                           return (
-                                              <ListItem key={todo}>
-                                                  <TextField id="standard-basic" label={`To do #${todos.indexOf(todo)+1}`} onChange={handleTodos(index)}/>
+                                              <ListItem key={index}>
+                                                  <TextField className={classes.cardContent} label={`To do #${index+1}`} onChange={handleTodos(index)}/>
                                               </ListItem>
                                           );
                                       })}
@@ -105,21 +117,28 @@ export default function FormTodo(){
                                   </List>
 
                               </CardContent>
-                              <CardActions>
-                                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                      <KeyboardDatePicker
-                                          margin="normal"
-                                          id="date-picker-dialog"
-                                          label="Complete at date: "
-                                          format="MM/dd/yyyy"
-                                          value={selectedDate}
-                                          onChange={handleDateChange}
-                                          KeyboardButtonProps={{
-                                              'aria-label': 'change date',
-                                          }}
-                                      />
-                                  </MuiPickersUtilsProvider>
+
+                              <CardActions >
+                                  <Grid container direction="row" justify = "flex-end" alignItems = "center" className={classes.datePicker}>
+                                      <MuiPickersUtilsProvider utils={DateFnsUtils} >
+                                          <KeyboardDatePicker
+                                              margin="normal"
+                                              id="date-picker-dialog"
+                                              label="Complete by date: "
+                                              format="MM/dd/yyyy"
+                                              value={selectedDate}
+                                              onChange={handleDateChange}
+                                              KeyboardButtonProps={{
+                                                  'aria-label': 'change date',
+                                              }}
+                                          />
+                                      </MuiPickersUtilsProvider>
+                                      <Fab aria-label={'Add'} className={classes.fab} color={"primary"}>
+                                          <AddIcon />
+                                      </Fab>
+                                  </Grid>
                               </CardActions>
+
                           </Card>
                       </Grid>
 
