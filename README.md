@@ -1,3 +1,10 @@
+## The up-to-date version was deploy on firebase (Both ui and api)
+  Link: https://whatodo-dcacc.firebaseapp.com/
+  
+  Api: https://us-central1-whatodo-dcacc.cloudfunctions.net/api/lists
+
+## --------------------------------------
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
