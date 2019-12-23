@@ -56,22 +56,19 @@ export default function FormTodo(){
         setSelectedDate(date);
     };
     const handleTodos  = (index) =>(event)=>{
-        let temp = todos;
+        let temp = [...todos];
         const value =event.target.value;
         temp[index] = value;
         setTodos(temp);
-
     };
     const handleAddTaskbutt =() =>{
-        let temp = todos;
-        temp.push("");
-        console.log(todos);
-        setTodos(temp);
+        setTodos([...todos, ""]);
         setNumTodo(numTodo+1);
     };
 
     useEffect(() => {
         // console.log (`You clicked ${count} times`);
+        console.log(todos);
     },[numTodo]);
 
     return(
